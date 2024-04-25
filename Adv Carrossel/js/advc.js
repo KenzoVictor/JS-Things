@@ -118,3 +118,56 @@ function slidePrev(){
     }, 10);
 }
 
+function drag(e){
+    //determina a distância do drag baseado no tipo de evento (mouse ou touch screen)//
+    if(e.type === "touchmove"){
+        cacl = (e.touches[0].clientX - x) / 1;
+    } else {
+        cacl = (e.clientX - x) / 1;
+    }
+    // calcula a nova posição do drag por adicionar uma distância calculada entre a última posição//
+    dragPosition = cacl + prev;
+}
+
+// adiciona event listeners para o mouse poder "dragar"//
+container.addEventListener("mousedown", (e) => {
+    //armazena a cordenada x inicial do ponteiro do mouse//
+    x = e.clientX;
+
+    //adiciona o evento drag event listener enquanto mouse se mexe//
+    container.addEventListener("mousemove", drag);
+
+    //atualiza a posição anterior por adicionar distancia calculada//
+    prev += cacl;
+});
+
+//adiciona event listeners para touch events para adicionar dragging na tela touchscreen//
+container.addEventListener("touchstart", (e) =>{
+    //armazena cordenada inicial x do ponto tocado//
+    x = e.touches[0].clientX;
+
+    //adiciona o drag event listener enquanto touch está sendo movido//
+    container.addEventListener("touchmove", drag);
+
+    //atualiza a posição anterior por adicionar a distancia calculada//
+    prev += cacl;
+});
+
+//adiciona event listeners para o fim de cada drag (mouse release ou touch release)//
+container.addEventListener("mouseup", handleDragEnd);
+container.addEventListener("touchend", handleDragEnd);
+
+function handleDragEnd(){
+    //checa a posição do drag relativa a posição anterior para determinar a direção do drag//
+    if(dragPosition < prev){
+        //se a posição do drag é menos que a posição anterior, o slide move para os próximos slides//
+        slideNext();
+    } else if(dragPosition > prev){
+        //se a posição do drag for maior que a posição anterior, o slide move para os slides anteriores//
+        slidePrev();
+    }
+
+    //remover os drag event listeners
+    container.removeEventListener("mousemove", drag);
+    container.removeEventListener("touchmove", drag);
+}
