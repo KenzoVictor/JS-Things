@@ -36,8 +36,8 @@ function slideNext(){
     offset = slides[0].offsetWidth * slideAmmount;
 
     //Aplica a animação de transição suavemente para mover o conteiner do carrossel//
-    container.computedStyleMap.transition = "left ease-in-out 500ms";
-    container.computedStyleMap.left = -offset + 'px';
+    container.style.transition = "left ease-in-out 500ms";
+    container.style.left = -offset + 'px';
 
     //Após delay de 500ms (5s), reseta a transição e reorganiza os slides//
     setTimeout(() => {
@@ -73,7 +73,48 @@ function slideNext(){
     }, 500);
 }
 
-//adicionar evento de clique na seta esquerda//
 arrLeft.addEventListener('click', slidePrev);
 
+function slidePrev(){
+    //calcula o número de slides que move com base no container carrossel e a largura de cada slide//
+    slideAmmount = Math.round(contentSlider.offsetWidth / slides[0].offsetWidth);
+
+    //disabilita o botão "anterior" temporáriamente para prever múltiplos cliques durante a animação//
+    arrLeft.disabled = true;
+
+    //remove qualquer animação de transição existente do conteiner carrossel//
+    container.style.transition = "none";
+
+    // Loop através de um número especifico de slides para mover//
+    for(let i = 0; i < slideAmmount; i++){
+        // Checa se o idex de slide de decremento e menor que 0 (se vai antes do primeiro index de slide)//
+        if(slideDecrement <0){
+            // reseta a ordem de todos os slides para a ordem inicial//
+            slides.forEach((slide) => {
+                slide.style.order = "initial";
+            });
+            // ajusto o index de decremento para nova posição//
+            slideDecrement = slideDecrement + slides.length;
+        }
+        //seta a ordem do slide atual para posição -1 (prioriza-o para o primeiro slide visual)//
+        slides[slideDecrement].style.order = "-1";
+
+        //decrementa o index de decrementação para próxima interação//
+        slideDecrement--;
+    }
+    //atualiza o index de incrementação para corresponder o index de decrementar ajustado//
+    slideIncrement = slideDecrement + 1;
+
+    // re-habilita o botão "anterior"//
+    arrLeft.disabled = false;
+
+    //ajusta a posição esquerda do container carrossel para mostrar o set de slides//
+    container.style.left = -offset + 'px';
+
+    //depois de um pequeno delay (10milisegundos), aplica a animação de transição para mover suavemente o carrossel para posição inicial//
+    setTimeout(() => {
+        container.style.transition = "left ease-in-out 500ms";
+        container.style.left = 0;
+    }, 10);
+}
 
