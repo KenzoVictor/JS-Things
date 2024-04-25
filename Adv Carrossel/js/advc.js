@@ -170,4 +170,5 @@ function handleDragEnd(){
     //remover os drag event listeners
     container.removeEventListener("mousemove", drag);
     container.removeEventListener("touchmove", drag);
+    //nova mudança//
 }
