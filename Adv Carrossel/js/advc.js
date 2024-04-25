@@ -39,7 +39,7 @@ function slideNext(){
     container.style.transition = "left ease-in-out 500ms";
     container.style.left = -offset + 'px';
 
-    //Após delay de 500ms (5s), reseta a transição e reorganiza os slides//
+    //Após delay de 500ms (0,5s), reseta a transição e reorganiza os slides//
     setTimeout(() => {
         //remove a animação de transição//
         container.style.transition = "none";
